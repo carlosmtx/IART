@@ -1,0 +1,2 @@
+Esqueleto e lógica do algoritmo completa.
+Falta parte mais nhé que é efetuar perturbações.

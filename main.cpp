@@ -7,7 +7,7 @@ int main(){
 	srand(time(NULL));
 	//freopen("output.txt","w",stdout);
     cout<<"write in file";
-    GeneticAlgorithm gen(10);
+    //GeneticAlgorithm gen(10);
 	return 0;
 	
 }
