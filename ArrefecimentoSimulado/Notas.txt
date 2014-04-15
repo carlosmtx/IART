@@ -1,2 +1,7 @@
 Esqueleto e lógica do algoritmo completa.
 Falta parte mais nhé que é efetuar perturbações.
+----------------------------------------------------------
+Já faz cenas e dá soluções boas.
+Dá para otimizar mais
+Tenho que rever a função que dada a temperatura me devolve o numero de aviões a alterar (matematica DXDXXD)
+----------------------------------------------------------
