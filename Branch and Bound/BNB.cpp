@@ -88,7 +88,7 @@ BNB::~BNB()
 {}
 
 
-vector<Node*> BNB::solve(vector<Aviao*> planes)
+bool BNB::solve(vector<Aviao*> planes)
 {
 	this->planes = planes;
 	currentTime = 0;
@@ -123,12 +123,21 @@ vector<Node*> BNB::solve(vector<Aviao*> planes)
 		{
 			queue.push((top->branches[i]));
 		}
-		cout << "Queue size: " << queue.size() <<  ",top " << *(queue.top()) << endl<<endl;
+		cout << "Queue size: " << queue.size() <<endl<<endl;
 		//system("PAUSE");
 	}
 
-	solution = buildSolution(top);
-	return solution;
+	buildSolution(top);
+	if (solution.size() == nPlanes)
+	{
+		printSolution();
+		return true;
+	}
+	else
+	{
+		cout << "No solution could be found" << endl;
+		return false;
+	}
 }
 
 int BNB::generateBranches(Node* origin)
@@ -194,7 +203,7 @@ int BNB::generateBranches(Node* origin)
 	return nBranches;
 }
 
-vector<Node*> BNB::buildSolution(Node* node)
+void BNB::buildSolution(Node* node)
 {
 	vector<Node*> sol;
 	while (node->plane != NULL)
@@ -203,10 +212,14 @@ vector<Node*> BNB::buildSolution(Node* node)
 		node = node->parent;
 	}
 	std::reverse(sol.begin(), sol.end());
-
-	cout << "solution: " << sol<<endl;
-	return sol;
+	solution = sol;
+	return;
 }
+
+void BNB::printSolution(){ 
+	cout << "solution: " << solution << endl; 
+}
+
 
 /*Node class related functions*/
 

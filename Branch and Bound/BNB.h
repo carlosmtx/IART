@@ -54,6 +54,7 @@ class BNB
 private:
 	vector<Aviao*> planes;
 	vector<Node*> solution;
+	bool hasSolution;
 	priority_queue<Node*, vector<Node*>, DereferenceCompareNode> queue;
 
 	//priority_queue<Node*> queue;
@@ -61,11 +62,13 @@ private:
 	int getLatestTime();
 	Aviao* nextPlane(Node* node);
 	int generateBranches(Node* origin);
-	vector<Node*> buildSolution(Node* node);
+	void buildSolution(Node* node);
 public:
 	BNB();
 	int getSolutionCost();
-	vector<Node*> solve(vector<Aviao*> planes);
+	vector<Node*> getSolution(){ return solution; };
+	void printSolution();
+	bool solve(vector<Aviao*> planes);
 	~BNB();
 };
 
