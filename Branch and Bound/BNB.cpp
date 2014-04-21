@@ -64,12 +64,7 @@ Aviao* BNB::nextPlane(Node* node)
 
 int BNB::getSolutionCost()
 {
-	int totalCost = 0;
-	for (vector<Aviao*>::iterator it = planes.begin(); it != planes.end(); it++)
-	{
-		totalCost = (*it)->getCusto(currentTime);
-	}
-	return totalCost;
+	return solution[0]->getTotalCost();
 }
 
 int BNB::getLatestTime()
@@ -130,7 +125,9 @@ bool BNB::solve(vector<Aviao*> planes)
 	buildSolution(top);
 	if (solution.size() == nPlanes)
 	{
+		cout << "Found ";
 		printSolution();
+		cout << "with cost : " << getSolutionCost()<<endl;
 		return true;
 	}
 	else
