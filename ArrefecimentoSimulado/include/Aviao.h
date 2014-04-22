@@ -44,10 +44,13 @@ public:
 		if (horaPreferencial > horaJanelaFim)	{throw ErroInput(ERRO_OUT(nome,horaPreferencial,horaJanelaInicio,horaJanelaFim,custoAterrAntecipada,custoAterrRetardada,tempoNaoUtilizacao,"A hora preferencial nao esta entre os valores da janela temporal"));}
 	}
 	int getCusto(int tempo){
-		if (tempo < horaJanelaInicio || tempo > horaJanelaFim){return 1000;} 
+		if (tempo < horaJanelaInicio || tempo > horaJanelaFim){
+			if(custoAterrAntecipada > custoAterrRetardada){ return 100 * custoAterrAntecipada;}
+			else { return 100 * custoAterrRetardada;}
+		} 
 		else if (tempo == horaPreferencial){return custoAterrAntecipada*(horaPreferencial-tempo);}
 		else if (tempo < horaPreferencial) {return custoAterrAntecipada*(horaPreferencial-tempo);}
-		else							   {return custoAterrAntecipada*(tempo-horaPreferencial);}
+		else							   {return custoAterrRetardada*(tempo-horaPreferencial);}
 	}
 };
 

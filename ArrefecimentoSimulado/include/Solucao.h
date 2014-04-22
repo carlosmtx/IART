@@ -81,7 +81,7 @@ public:
 				int fimJ = inicioJ + aterragens[j].aviao->tempoNaoUtilizacao;
 
 				if(intervaloIntersecta(incioAterragem, fimAterragem, inicioJ, fimJ)){
-					res+= 2000;
+					res+= 1500;
 				}
 			}
 
@@ -102,8 +102,5 @@ public:
 	}
 
 
-
-
-	
 };
 #endif

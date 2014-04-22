@@ -4,6 +4,8 @@
 #include "Populacao.h"
 #include "Solucao.h"
 
+using namespace std;
+
 class SimulatedAnnealing{
 private:
 	Populacao pop;
@@ -15,7 +17,7 @@ private:
 
 	int tempInicial;
 	int tempAtual;
-	int energiaAtual;
+	int energiaInicial;
 	int variacaoEnergia;
 
 	int temperatura;
