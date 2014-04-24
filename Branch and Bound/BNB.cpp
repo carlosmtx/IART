@@ -12,9 +12,9 @@ bool is_overlapping(int x1, int x2, int y1, int y2) {
 	return (bool)((((unsigned int)((x2 - y1) | (y2 - x1))) >> (sizeof(int)* 8 - 1)) ^ 1);
 }
 
-ostream& operator<<(std::ostream& os, priority_queue<Node> container)
+ostream& operator<<(std::ostream& os, priority_queue<Node*> container)
 {
-	priority_queue<Node> x = container;
+	priority_queue<Node*> x = container;
 	os << "{";
 	while (!x.empty())
 	{
@@ -34,7 +34,7 @@ ostream& operator<<(std::ostream& os, vector<T*> container)
 	os << "[";
 	for (int i = 0; i < size; i++)
 	{
-		os << (*container[i]);
+		os << (container[i]);
 		if (i < size - 1)
 			os << ",";
 	}
@@ -92,7 +92,7 @@ bool BNB::solve(vector<Aviao*> planes)
 	//root.parent.time = planes[0]->horaJanelaInicio; //set earliest time for the root node
 	int nodeLvl, i, nBranch;
 	queue.push(root);
-	Node * top=NULL;
+	Node * top = NULL;
 	nodeLvl = 0;
 	int nPlanes = planes.size();
 	while (!queue.empty()) //condition must change possibly queue.top().level != planes.size()
@@ -102,7 +102,7 @@ bool BNB::solve(vector<Aviao*> planes)
 		nodeLvl = top->level;
 		if (nodeLvl == nPlanes)
 			break;
-		cout <<"nodeLvl: "<<nodeLvl <<", testing: " << (*top) << endl;
+		cout << "nodeLvl: " << nodeLvl << ", testing: " << top << endl;
 		//cout <<endl << "doing lvl:" << nodeLvl << endl;
 		Node* parent = top;
 		cout << endl << "Path: " << endl << "\t";
@@ -111,14 +111,14 @@ bool BNB::solve(vector<Aviao*> planes)
 			cout << parent->plane->nome << "[" << parent->departTime << "]" << "<-";
 			parent = parent->parent;
 		}
-		cout << "root" << endl<<"\tCost:" <<top->getTotalCost() << endl<<endl;
+		cout << "root" << endl << "\tCost:" << top->getTotalCost() << endl << endl;
 		nBranch = generateBranches(top);
 		cout << endl << "number of branches generated: " << nBranch << endl;
 		for (i = 0; i < nBranch; i++)
 		{
 			queue.push((top->branches[i]));
 		}
-		cout << "Queue size: " << queue.size() <<endl<<endl;
+		cout << "Queue size: " << queue.size() << endl << endl;
 		//system("PAUSE");
 	}
 
@@ -127,7 +127,7 @@ bool BNB::solve(vector<Aviao*> planes)
 	{
 		cout << "Found ";
 		printSolution();
-		cout << "with cost : " << getSolutionCost()<<endl;
+		cout << "with cost : " << getSolutionCost() << endl;
 		return true;
 	}
 	else
@@ -152,6 +152,7 @@ int BNB::generateBranches(Node* origin)
 			Node* next = new Node(nextPlane, level);
 			next->parent = origin;
 			next->departTime = i;
+			next->restrictions.push_back(timeInterval(i, i + next->plane->tempoNaoUtilizacao));
 			origin->branches.push_back(next);
 			nBranches++;
 			cout << "Added branch from root to " << next->plane->nome << " at time -> " << next->departTime << endl;
@@ -159,40 +160,50 @@ int BNB::generateBranches(Node* origin)
 	}
 	else
 	{
-		cout << "Testing interval: [" << origin->departTime <<","<<origin->departTime+origin->plane->tempoNaoUtilizacao<<"]"<< endl;
-		//origin->restrictions.push_back(timeInterval(origin->departTime, origin->departTime + origin->plane->tempoNaoUtilizacao)); //adds temporary restriction
-		for (int i = nextPlane->horaJanelaInicio; i <= end;i++)
+		bool valid;
+		int size = origin->restrictions.size();
+		int startNext, endNext, startOri, endOri;
+		cout << "Restrictions: ";
+		for (int i = 0; i < size; i++)
 		{
-			cout << "  with: [" << i <<","<<i+nextPlane->tempoNaoUtilizacao<<"]";
-			if (is_overlapping(i, i + nextPlane->tempoNaoUtilizacao, origin->departTime, origin->departTime+origin->plane->tempoNaoUtilizacao))
+			cout << "[" << origin->restrictions[i].start << "," << origin->restrictions[i].finish << "]";
+			if (i != origin->restrictions.size() - 1)
+				cout << ", ";
+		}
+		cout << endl;
+		for (int i = nextPlane->horaJanelaInicio; i <= end; i++)
+		{
+			valid = true;
+			startNext = i;
+			endNext = i + nextPlane->tempoNaoUtilizacao;
+			for (int j = 0; j < size; j++)
 			{
-				cout << " ... skipped "<< endl;
+				startOri = origin->restrictions[j].start;
+				endOri = origin->restrictions[j].finish;
+				cout << "Testing [" << startNext << "," << endNext << "] with: [" << startOri << "," << endOri << "]" << endl;
+				if (is_overlapping(startNext, endNext, startOri, endOri))
+				{
+					cout << " ... skipped " << endl;
+					valid = false;
+					break;
+				}
 			}
-			else
+			if (valid)
 			{
 				Node* next = new Node(nextPlane, level);
-				if (origin->noConflict(next, i))
+				//add parent's restrictions to new son
+				cout << "\tadding " << size << " parent restrictions\n\n";
+				for (int z = 0; z < size; z++) //add parent's restrictions
 				{
-					//add parent's restrictions to new son
-					int nRestrictions = origin->restrictions.size();
-
-					for (int j = 0; j < nRestrictions; j++) //add parent's restrictions
-					{
-						next->restrictions.push_back(origin->restrictions[j]);
-					}
-
-					//add new branch
-					next->departTime = i;
-					next->parent = origin;
-					origin->branches.push_back(next);
-					nBranches++;
-					cout << " ... Added branch " << origin->plane->nome << " to " << next->plane->nome << " with interval: [" << next->departTime <<"," <<next->departTime+next->plane->tempoNaoUtilizacao<<"], and cost: "<<next->getTotalCost() << endl;
+					next->restrictions.push_back(origin->restrictions[z]);
 				}
-				else
-				{
-					delete next; //avoid memory leak
-					cout << ".... Deleted 1 of "<<origin->restrictions.size()<<" restrictions" << endl;
-				}
+				//add new branch
+				next->departTime = startNext;
+				next->parent = origin;
+				next->restrictions.push_back(timeInterval(startNext, endNext));
+				origin->branches.push_back(next);
+				nBranches++;
+				cout << " ... Added branch " << origin->plane->nome << " to " << next->plane->nome << " with interval: [" << startNext << "," << endNext << "], and cost: " << next->getTotalCost() << endl << endl;
 			}
 		}
 		//origin->restrictions.pop_back(); //removes temporary restriction
@@ -213,38 +224,26 @@ void BNB::buildSolution(Node* node)
 	return;
 }
 
-void BNB::printSolution(){ 
-	cout << "solution: " << solution << endl; 
+void BNB::printSolution(){
+	cout << "solution: ";
+	cout << "[";
+	int size = solution.size();
+	for (int i = 0; i < size; i++)
+	{
+		cout << (solution[i]->plane->nome) << "->" << solution[i]->departTime;
+		if (i < size - 1)
+			cout << ",";
+	}
+	cout << "]" << endl;
 }
 
 
 /*Node class related functions*/
 
-bool Node::noConflict(Node* node, int t)
-{
-	int size = restrictions.size();
-	int start = node->plane->horaJanelaInicio;
-	int end = node->plane->horaJanelaFim;
-	int timeOcupied = node->plane->tempoNaoUtilizacao;
-
-	//cout << "restriction conflit: " << this->plane->nome << " has " << restrictions.size() << " restrictions, " << node->plane->nome << " has " << node->restrictions.size() << " restrictions" << endl;
-	for (start; start <= end; start++)
-	{
-		for (int i = 0; i < size; i++)
-		{
-			//cout << "testing " << "[" << start << "," << start + timeOcupied << "]" << " to " << "[" << restrictions[i].start << "," << restrictions[i].finish << "]" << endl;
-			if (is_overlapping(start, start + timeOcupied, restrictions[i].start, restrictions[i].finish))
-				return false;
-		}
-	}
-
-	return true;
-}
-
 Node::Node()
 {
 	plane = NULL;
-	level =0;
+	level = 0;
 }
 
 Node::Node(Aviao* plane, int lvl)
@@ -253,13 +252,13 @@ Node::Node(Aviao* plane, int lvl)
 	this->level = lvl;
 }
 
-ostream& operator<<(std::ostream& os, const Node obj)
+ostream& operator<<(std::ostream& os, const Node* obj)
 {
-	if (obj.plane == NULL)
+	if (obj->plane == NULL)
 		os << "root";
 	else
 	{
-		os << "{" << obj.plane->nome << " -> " << obj.departTime << "}";
+		os << "{" << obj->plane->nome << " -> " << obj->departTime << "}";
 	}
 	return os;
 }
@@ -271,7 +270,7 @@ int Node::getTotalCost() const
 	const Node* aux = this;
 	while (aux->plane != NULL)
 	{
-	
+
 		auxValue = aux->plane->getCusto(aux->departTime);
 		if (auxValue != -1)
 			cost += auxValue;
