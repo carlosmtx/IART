@@ -34,9 +34,8 @@ public:
 	int getTotalCost() const;
 
 	int getTimeInterval();
-	bool noConflict(Node* node, int t);
 
-	friend ostream& operator<<(std::ostream& os, const Node obj);
+	friend ostream& operator<<(std::ostream& os, const Node* obj);
 
 
 };
