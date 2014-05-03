@@ -4,7 +4,6 @@
 #include "Populacao.h"
 #include "Solucao.h"
 
-using namespace std;
 
 class SimulatedAnnealing{
 private:
@@ -20,7 +19,7 @@ private:
 	int energiaInicial;
 	int variacaoEnergia;
 
-	int temperatura;
+	double temperatura;
 
 	
 	Solucao solucaoInicial;
@@ -30,7 +29,7 @@ private:
 
 public:
 	SimulatedAnnealing();
-	SimulatedAnnealing(int maxIteracoes, Populacao pop, int maxPerturbacoes, int maxSucessos, float fatorReducao);
+	SimulatedAnnealing(int maxIteracoes, Populacao pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, Solucao& solInicia);
 	void executa(); // corre algoritmo
 
 	void geraEstadoInicial(); // Gera estado inicial
@@ -38,6 +37,7 @@ public:
 	Solucao perturbacao(Solucao sol); // Exerce uma perturbacao sobre a solucao passada
 	bool condExponenteAleatoria(); // condicao para mesmo alterar a solucao atual
 
+	Solucao getSolucaoAtual(){ return this->solucaoAtual;};
 };
 
 
