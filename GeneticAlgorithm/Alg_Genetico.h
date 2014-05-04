@@ -4,11 +4,10 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <exception>
 #include <random>
 #include "Cromossoma.h"
- 
-
 
 using namespace std;
 
@@ -16,20 +15,25 @@ class Alg_Genetico{
 private:
 	vector<Cromossoma*> cromossomas;
 	vector<double> valores;
-	int elitista;
-	int selecionados;
+	bool elitista;
+	int selecionadosElitista;
 	double mutationProb;
 	void   cicloDeVida();
 	vector<Cromossoma*> obterAmostraPRepr(int n);
 	vector<Cromossoma*> removerMenosFit(int n);
-
+	ofstream csvFile;
+	ofstream htmlFile;
 public:
-	Alg_Genetico(int seleccionadosPIteracao,int elitista);
-	
+	Alg_Genetico(int seleccionadosPIteracao,bool elitista);
 	Alg_Genetico();
-	Alg_Genetico(vector<Cromossoma*> popInicial,int selecionadosPRonda,double probMutacao);
+	Alg_Genetico(vector<Cromossoma*> popInicial,double probMutacao,bool elitista);
+	double obterSoma();
+	Cromossoma* obterMaisBemAdaptado();
+	Cromossoma* fazerIteracoes(int n);
+	void printAll(int& iteration);
 
-	Cromossoma* fazerIteracoes(int n);	
+	/*Print*/
+
 	
 };
 

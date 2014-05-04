@@ -51,7 +51,7 @@ public:
 		if (tempo < horaJanelaInicio || tempo > horaJanelaFim){return -1;} 
 		else if (tempo == horaPreferencial){return custoAterrAntecipada*(horaPreferencial-tempo);}
 		else if (tempo < horaPreferencial) {return custoAterrAntecipada*(horaPreferencial-tempo);}
-		else							   {return custoAterrAntecipada*(tempo-horaPreferencial);}
+		else							   {return custoAterrRetardada *(tempo-horaPreferencial);}
 	}
 };
 

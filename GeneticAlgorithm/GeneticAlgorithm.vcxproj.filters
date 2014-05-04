@@ -35,5 +35,8 @@
     <ClCompile Include="Alg_Genetico.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Solucao.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
