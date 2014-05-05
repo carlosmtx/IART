@@ -1,6 +1,7 @@
 #include "GenAlgoritmo.h"
 #include "GenSolucao.h"
 #include "GenCromossoma.h"
+#include "UniCost.h"
 #include <fstream>
 #include <iostream>
 #include <time.h>
@@ -10,6 +11,14 @@ int main(){
 	srand(time(NULL));
 	
 	try{
+	
+		avioes.push_back(Aviao("1", 2, 0, 3, 2, 4, 4));
+		avioes.push_back(Aviao("2", 3, 3, 10, 3, 1, 2));
+		avioes.push_back(Aviao("3", 25, 20, 40, 7, 2, 3));
+		avioes.push_back(Aviao("4", 35, 30, 40, 2, 1, 5));
+		avioes.push_back(Aviao("5", 42, 25, 50, 4, 8, 6));
+		
+		/*
 		avioes.push_back(Aviao("TAP-V0001"		,11,0 ,30,2 ,4 ,5 ));
 		avioes.push_back(Aviao("TAP-V0002"		,22,20,25,3 ,5 ,5 ));
 		avioes.push_back(Aviao("RyanAir-V003"	,33,30,45,4 ,6 ,5 ));
@@ -28,6 +37,7 @@ int main(){
 		avioes.push_back(Aviao("CantAir-V0016"	,32,18,49,7 ,2 ,5 ));	
 		avioes.push_back(Aviao("CantAir-V0017"	,42,24,49,7 ,2 ,5 ));	
 		avioes.push_back(Aviao("CantAir-V0018"	,82,24,83,7 ,2 ,5 ));	
+		*/
 	}
 	catch(ErroInput& e){
 		cout << e.erro << endl;
@@ -40,4 +50,9 @@ int main(){
 	GenSolucao* best = (GenSolucao*)a.fazerIteracoes(5000);
 
 	cout << "\n";
+
+	BNB search;
+	search.solve(avioes);
+
+	system("PAUSE");
  }

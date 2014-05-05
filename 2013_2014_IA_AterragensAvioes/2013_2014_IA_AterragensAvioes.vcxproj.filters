@@ -24,6 +24,9 @@
     <ClCompile Include="GenAlgoritmo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UniCost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aviao.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GenAlgoritmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UniCost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
