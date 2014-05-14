@@ -27,6 +27,9 @@
     <ClCompile Include="UniCost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimulatedAnn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aviao.h">
@@ -42,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UniCost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatedAnn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimAnnSolucao.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

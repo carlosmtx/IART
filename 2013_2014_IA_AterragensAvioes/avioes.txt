@@ -1,0 +1,13 @@
+Nome HoraPreferencial HoraJanInicial HoraJanFim CustoAterragemAntecipada CustoAterragemRetardada TempoRepousoPista
+Lol1 11 0  30 2  4  5
+Kek2 22 20 25 3  5  5
+Kek3 33 30 45 4  6  5
+Kek4 44 40 65 5  7  5
+Kek5 55 40 75 6  8  5
+Kek6 66 50 95 7  9  5
+Kek7 77 20 95 7  8  5
+Kek8 88 54 95 7  7  5
+Kek9 98 80 99 7  6  5
+Kek10 13 1  95 7  5  5 
+Kek11 23 13 45 7  4  5 
+Kek12 33 10 40 7  3  5 
