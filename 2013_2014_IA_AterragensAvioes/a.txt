@@ -1,0 +1,7 @@
+Nome HoraPreferencial HoraJanInicial HoraJanFim CustoAterragemAntecipada CustoAterragemRetardada TempoRepousoPista
+TAP-V0001		11 0  30 2 4 5
+TAP-V0002		22 20 25 3 5 5
+RyanAir-V003	33 30 45 4 6 5
+RyanAir-V004	44 40 65 5 7 5
+Lufthansa-V005	55 40 75 6 8 5
+Lufthansa-V006	66 50 95 7 9 5

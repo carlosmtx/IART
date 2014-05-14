@@ -1,18 +1,19 @@
-function drawAll(){
+function drawAll(canvasName,divID){
 	var red;
 	var green;
 	var blue;
 	var scaleFactor;
-	function getSortedData(){
-		var json = document.getElementById('jsonData').innerHTML;
+	function getSortedData(divID){
+		var json = document.getElementById(divID).innerHTML;
 		var data = JSON.parse(json);
 		data.sort(function(a,b){return a.hAterragem - b.hAterragem;});
 		console.log(data);
 		return data;
 	}
 
-	function draw(i,data){
-		var c=document.getElementById('myCanvas');
+	function draw(i,data,canvasName,divID){
+		
+		var c=document.getElementById(canvasName);
 		var ctx=c.getContext('2d');
 		ctx.fillStyle= "rgba("+red.toString()+","+green.toString()+","+blue.toString()+",0.5)";
 		
@@ -26,7 +27,7 @@ function drawAll(){
 
 
 		
-		ctx.fillRect(data[i].hAterragem*scaleFactor,30,data[i].tempoOcup*scaleFactor,30);
+		ctx.fillRect(data[i].hAterragem*scaleFactor,60,data[i].tempoOcup*scaleFactor,30);
 		ctx.fillStyle= "rgba(0,0,0,1)";
 		
 
@@ -40,10 +41,11 @@ function drawAll(){
 		
 
 		if ( i+1 < data.length){
-			{setTimeout(function(){draw(i+1,data);},1000);}
+			{setTimeout(function(){draw(i+1,data,canvasName,divID);},1000);}
 		}
 	}
-	var data = getSortedData();
+	
+	var data = getSortedData(divID);
 	red = 0;
 	green = 0;
 	blue = 0;
@@ -54,21 +56,27 @@ function drawAll(){
 
 	scaleFactor = MAXSIZE / MAXTIME;
 	
-	var c=document.getElementById('myCanvas');
+	var c=document.getElementById(canvasName);
+	console.log(c);
 	var ctx=c.getContext('2d');
 	ctx.fillStyle= "rgba(0,0,0,0.1)";
-	ctx.fillRect(0,60,MAXTIME*scaleFactor,30);
+	ctx.fillRect(0,90,MAXTIME*scaleFactor,30);
+	ctx.fillStyle= "rgba(0,0,0,1)";		
+	ctx.font="10px Georgia";
+	if(canvasName == "genCanvas") ctx.fillText("Algoritmo Genetico",0,30);
+	if(canvasName == "saCanvas") ctx.fillText("Algoritmo Arrefecimento Simulado",0,30);
+
 	for ( var i = 0 ; i < MAXTIME;i+=2){
 		ctx.fillStyle= "rgba(0,0,0,0.1)";
 
-		ctx.fillRect(i*scaleFactor,60,scaleFactor,30);
+		ctx.fillRect(i*scaleFactor,90,scaleFactor,30);
 		ctx.fillStyle= "rgba(0,0,0,1)";		
 		ctx.font="10px Georgia";
-		ctx.fillText(i.toString(),i*scaleFactor,75);
+		ctx.fillText(i.toString(),i*scaleFactor,105);
 	}
 
 
-	draw(0,data);
+	draw(0,data,canvasName,divID);
 	
 }
 

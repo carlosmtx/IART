@@ -8,6 +8,9 @@
 
 #include "Aviao.h"
 
+#define JSON_AVIAO(nome_,hAterragem_,tempoOc_,intervSup_,intervInf_) "{\"nome\":"+'"'+nome_+'"'+",\"hAterragem\":"+to_string(hAterragem_)+ ",\"tempoOcup\":"+to_string(tempoOc_)+",\"intervSup\":"+to_string(intervSup_)+",\"intervInf\":"+to_string(intervInf_)+"}"
+
+
 using namespace std;
 class AviaoAterragem{
 public:
@@ -27,7 +30,7 @@ public:
 	vector<AviaoAterragem> aterragens;
 	int janelaTemp;
 	int custoSolucao;
-	
+
 	SimAnnSolucao(){};
 
 	SimAnnSolucao(vector<Aviao>& avioes, int janelaTemp){
@@ -47,9 +50,9 @@ public:
 		for (int i= 0 ; i <  avioes.size() ; i++){											/*Atribuir a cada aviao uma hora de aterragem*/
 			aterragens.push_back(AviaoAterragem(&avioes[i],randomNumbers[i]));
 		}
-		
+
 		calculaCustoSolucao(); // atualiza "custoSolucao"
-		
+
 	}
 
 
@@ -76,7 +79,7 @@ public:
 			// Verificar tempo de Nao Utilizacao da Pista
 			int incioAterragem = aterragens[i].hAterragem;
 			int fimAterragem = incioAterragem + aterragens[i].aviao->tempoNaoUtilizacao;
-			
+
 			int j = i;
 			for(j = j+1 ; j < aterragens.size(); j++){
 				int inicioJ = aterragens[j].hAterragem;
@@ -111,13 +114,41 @@ public:
 		cout << "\n";
 
 		for ( int i = 0 ; i < aterragens.size() ; i++){
-				cout << left<< setw(20) <<aterragens[i].aviao->nome;
-				cout << left<< setw(8) <<std::to_string(aterragens[i].hAterragem);
-				cout << left<< setw(8)  <<to_string((int)aterragens[i].getCusto());
-				cout << endl;
+			cout << left<< setw(20) <<aterragens[i].aviao->nome;
+			cout << left<< setw(8) <<std::to_string(aterragens[i].hAterragem);
+			cout << left<< setw(8)  <<to_string((int)aterragens[i].getCusto());
+			cout << endl;
 		}
-	
-		//cout << (JSON_AVIAO("",1,2,3,4));
+
+	}
+
+	string toString(){
+		string str;
+		str += "[";
+		for ( int i = 0 ; i < aterragens.size() ; i++){
+
+			aterragens[i].aviao->nome;
+			aterragens[i].aviao->tempoNaoUtilizacao;
+			aterragens[i].aviao->custoAterrAntecipada;
+
+			str+=((string)JSON_AVIAO(
+				aterragens[i].aviao->nome,
+				aterragens[i].hAterragem,
+				aterragens[i].aviao->tempoNaoUtilizacao,
+				aterragens[i].aviao->horaJanelaInicio,
+				aterragens[i].aviao->horaJanelaFim));
+			if ( i != aterragens.size()-1 ){str+=",";}
+		}
+		str += "]";
+		return str;
+		/*
+		string str;
+		str +="<table><tr>";
+		for ( int i = 0 ; i < aterragens.size() ; i++){
+		str+=(string)+"<td class='nomeAviao'>"+aterragens[i].aviao->nome+"</td>" +"<td class='tempoAterragem'>"+ std::to_string(aterragens[i].tempo)+"</td>"+"<td class='custoAterragem'>"+to_string((int)aterragens[i].getCusto())+"</td>";
+		}
+		str+="</tr></table>";
+		return str;*/
 	}
 
 

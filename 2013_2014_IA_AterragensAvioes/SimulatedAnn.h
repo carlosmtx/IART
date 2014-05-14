@@ -1,6 +1,7 @@
 #ifndef SIMUL_H
 #define SIMUL_H
 
+#include <fstream>
 #include "SimAnnSolucao.h"
 #include "Aviao.h"
 
@@ -26,11 +27,13 @@ private:
 	SimAnnSolucao solucaoAtual;
 	vector<SimAnnSolucao> caminho;
 
+	 ofstream* htmlFile;
+
 
 public:
 	SimulatedAnnealing();
-	SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal);
-	SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, SimAnnSolucao& solInicia);
+	SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, ofstream* htmlFile);
+	SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, SimAnnSolucao& solInicia, string resultPath);
 	void executa(); // corre algoritmo
 
 	void geraEstadoInicial(); // Gera estado inicial

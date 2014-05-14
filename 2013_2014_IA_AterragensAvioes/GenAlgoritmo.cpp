@@ -72,7 +72,7 @@ inline void GenAlgoritmo::printAll(int& iteration){
 	delete(best);
 }
 
-GenAlgoritmo::GenAlgoritmo(vector<GenCromossoma*> popInicial,double probMutacao,bool elitista){
+GenAlgoritmo::GenAlgoritmo(vector<GenCromossoma*> popInicial,double probMutacao,bool elitista, ofstream* htmlFile, string csvPath){
 	this->cromossomas = popInicial;
 	this->mutationProb = probMutacao;
 	this->elitista = elitista;
@@ -80,9 +80,9 @@ GenAlgoritmo::GenAlgoritmo(vector<GenCromossoma*> popInicial,double probMutacao,
 	if ( elitista && popInicial.size()%2 == 0){
 		this->cromossomas.pop_back();
 	}
-	csvFile.open("Solucao/Genresults.csv ",ios::out);
-	htmlFile.open("Solucao/results.html",ios::out);	
-	printHTMLHeader(htmlFile);
+	csvFile.open(csvPath,ios::out);
+	this->htmlFile = htmlFile;
+
 }
 
 vector<GenCromossoma*> GenAlgoritmo::obterAmostraPRepr(int n){
@@ -228,8 +228,8 @@ GenCromossoma* GenAlgoritmo::fazerIteracoes(int n){
 	}
 	best->printString();
 	cout <<endl<<"CUSTO:"<< 1/best->obterValor();
-	htmlFile <<"<div id=\"jsonData\" style=\"display:none;\">" <<best->toString() <<"</div>";
-	htmlFile <<"<script>drawAll();</script>";
+	*htmlFile <<"<div id=\"jsonDataGen\" style=\"display:none;\">" <<best->toString() <<"</div>";
+	
 	return best;
 }
 

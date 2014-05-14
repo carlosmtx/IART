@@ -22,11 +22,11 @@ private:
 	vector<GenCromossoma*> obterAmostraPRepr(int n);
 	vector<GenCromossoma*> removerMenosFit(int n);
 	ofstream csvFile;
-	ofstream htmlFile;
+	ofstream* htmlFile;
 public:
 	GenAlgoritmo(int seleccionadosPIteracao,bool elitista);
 	GenAlgoritmo();
-	GenAlgoritmo(vector<GenCromossoma*> popInicial,double probMutacao,bool elitista);
+	GenAlgoritmo(vector<GenCromossoma*> popInicial,double probMutacao,bool elitista, ofstream* htmlFile, string csvPath);
 	double obterSoma();
 	GenCromossoma* obterMaisBemAdaptado();
 	GenCromossoma* fazerIteracoes(int n);

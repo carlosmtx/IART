@@ -2,7 +2,8 @@
 
 SimulatedAnnealing::SimulatedAnnealing(){}
 
-SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal){
+SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, ofstream* htmlFile){
+
 	this->maxIteracoes = maxIteracoes;
 	this->pop = pop;
 	
@@ -13,11 +14,14 @@ SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int 
 	this->maxSucessos = maxSucessos;
 	this->fatorReducao = fatorReducao;
 
+	this->htmlFile = htmlFile;
+
 	geraEstadoInicial();
 	executa();
 }
 
-SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, SimAnnSolucao& solInicial){
+SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int maxPerturbacoes, int maxSucessos, float fatorReducao, int janelaTemporal, SimAnnSolucao& solInicial, string resultsPath){
+		
 	this->maxIteracoes = maxIteracoes;
 	this->pop = pop;
 	
@@ -29,6 +33,7 @@ SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int 
 	this->fatorReducao = fatorReducao;
 
 	this->solucaoInicial = solInicial;
+
 	executa();
 }
 
@@ -54,7 +59,7 @@ void SimulatedAnnealing::executa(){
 		nSucessos = 0;
 		contadorAux = 0;
 
-		if(j%150 == 0){ 
+		if(j%200 == 0){ 
 			cout << ".";
 		}
 		//cout << "Iteracao " << j << endl;
@@ -90,15 +95,15 @@ void SimulatedAnnealing::executa(){
 		temperatura = this->fatorReducao * temperatura;
 		j++;
 
-		//cout << " --------------------------------------" << endl;
+
 	}while(temperatura > 0 && j < maxIteracoes); // Para o algoritmo quando temperatura chegar a 0 (nunca lel) ou atingir o max de iters
 
-	//cout << endl << "Algoritmo terminou apos " << j << " iteracoes." << endl;
+
 	cout << endl << "A melhor solucao encontrada foi: " << itMelhor << "/" << j << endl;
-	//cout << "Fim" << endl;
-	//solucaoAtual.imprimeSolucao();
 	solucaoAtual.printSolucaoFinal();
 	cout <<endl<<"CUSTO:"<< solucaoAtual.getCustoSolucao() << endl;
+
+	*htmlFile <<"<div id=\"jsonDataSA\" style=\"display:none;\">" <<solucaoAtual.toString() <<"</div>";
 }
 
 void SimulatedAnnealing::geraEstadoInicial(){
@@ -127,7 +132,7 @@ SimAnnSolucao SimulatedAnnealing::perturbacao(SimAnnSolucao s){
 	int noAvioes = pop.size();
 
 	int	noIteradores = 1;
-	if(energiaSolAtual > 1000) { noIteradores = 2;}
+	if(energiaSolAtual > 1000) { noIteradores = 3;}
 	
 	// Numero de Solucoes geradas a cada iteracao é igual ao numero de avioes
 	for(int i = 0; i < pop.size(); i++){
@@ -154,7 +159,7 @@ SimAnnSolucao SimulatedAnnealing::perturbacao(SimAnnSolucao s){
 			
 			// A inserir aleatoriamente na hora preferencial
 			int r = rand();
-			if(r < 0.1){
+			if(r < 0.3){
 				cur.aterragens.at(aleat[j]).hAterragem = aux->horaPreferencial;
 			}
 			else{

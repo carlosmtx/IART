@@ -89,9 +89,18 @@ int main(){
 	}
 	*/
 
-	cout << "- A executar Arrefecimento Simualado " << endl;
-	SimulatedAnnealing s = SimulatedAnnealing(3000,avioes,5,5,0.98,100);
-	cout << "\n";
+	string resultsPath = "Solucao/results.html";
+	ofstream htmlFile;
+	htmlFile.open(resultsPath,ios::out);
+	htmlFile <<(string)" <head>"+
+			"<script src=\"results.js\"></script>"+
+			"</head>"+
+			"<canvas id=\"genCanvas\" width=\"10000\" height=\"100\">"+
+			"</canvas>" +
+			"<canvas id=\"saCanvas\" width=\"10000\" height=\"100\">"+
+			"</canvas>" +
+			"<canvas id=\"bnbCanvas\" width=\"10000\" height=\"100\">"+
+			"</canvas>";
 	
 
 	cout << "- A executar Algoritmo Genetico " << endl;
@@ -99,15 +108,28 @@ int main(){
 	for ( int i = 0 ; i< 50 ; i++){
 		solucoes.push_back(new GenSolucao(avioes,1000,100));
 	}
-	GenAlgoritmo a(solucoes,0.1,true);
-	GenSolucao* best = (GenSolucao*)a.fazerIteracoes(5000);
+	GenAlgoritmo a(solucoes,0.1,true, &htmlFile, "Solucao/results.csv");
+	GenSolucao* best = (GenSolucao*)a.fazerIteracoes(1000);
 
 	cout << "\n";
+	
+	cout << "- A executar Arrefecimento Simulado " << endl;
+	SimulatedAnnealing s = SimulatedAnnealing(2000,avioes,5,5,0.98,100, &htmlFile);
+	cout << "\n";
 
+	htmlFile << "<script>drawAll(\"genCanvas\",\"jsonDataGen\");</script>";
+	htmlFile << "<script>drawAll(\"saCanvas\",\"jsonDataSA\");</script>";
+	htmlFile << "<script>drawAll(\"bnbCanvas\",\"jsonDataBNB\");</script>";
+
+
+	htmlFile.close();
+	
+	/*
 	cout << "- A executar Branch And Bound " << endl;
 	BNB search;
 	search.solve(avioes);
-
+	
+	*/
 	
 
 	system("PAUSE");
