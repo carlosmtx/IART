@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <string>
 using namespace std;
-#define JSON_AVIAO(nome_,hAterragem_,tempoOc_,intervSup_,intervInf_) "{\"nome\":"+'"'+nome_+'"'+",\"hAterragem\":"+to_string(hAterragem_)+ ",\"tempoOcup\":"+to_string(tempoOc_)+",\"intervSup\":"+to_string(intervSup_)+",\"intervInf\":"+to_string(intervInf_)+"}"
+#define JSON_AVIAO(nome_,hAterragem_,tempoOc_,intervInf_,intervSup_) "{\"nome\":"+'"'+nome_+'"'+",\"hAterragem\":"+to_string(hAterragem_)+ ",\"tempoOcup\":"+to_string(tempoOc_)+",\"intervSup\":"+to_string(intervSup_)+",\"intervInf\":"+to_string(intervInf_)+"}"
 
 GenSolucao::GenSolucao(vector<AviaoTempo> aterragens,double penalizacao,int domTemporal,int maskUpper,int maskLower){
 	this->aterragens =  aterragens;
@@ -109,7 +109,7 @@ string GenSolucao::toString(){
 	string str;
 	str += "[";
 	for ( int i = 0 ; i < aterragens.size() ; i++){
-	 str+=((string)JSON_AVIAO(aterragens[i].aviao->nome,aterragens[i].tempo,aterragens[i].aviao->tempoNaoUtilizacao,aterragens[i].aviao->horaJanelaFim,aterragens[i].aviao->horaJanelaFim));
+	 str+=((string)JSON_AVIAO(aterragens[i].aviao->nome,aterragens[i].tempo,aterragens[i].aviao->tempoNaoUtilizacao,aterragens[i].aviao->horaJanelaInicio,aterragens[i].aviao->horaJanelaFim));
 	 if ( i != aterragens.size()-1 ){str+=",";}
 	}
 	str += "]";

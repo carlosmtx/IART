@@ -95,15 +95,15 @@ int main(){
 	htmlFile <<(string)" <head>"+
 			"<script src=\"results.js\"></script>"+
 			"</head>"+
-			"<canvas id=\"genCanvas\" width=\"10000\" height=\"100\">"+
+			"<canvas id=\"genCanvas\" width=\"10000\" height=\"200\">"+
 			"</canvas>" +
-			"<canvas id=\"saCanvas\" width=\"10000\" height=\"100\">"+
+			"<canvas id=\"saCanvas\" width=\"10000\" height=\"200\">"+
 			"</canvas>" +
-			"<canvas id=\"bnbCanvas\" width=\"10000\" height=\"100\">"+
+			"<canvas id=\"bnbCanvas\" width=\"10000\" height=\"200\">"+
 			"</canvas>";
 	
 
-	cout << "- A executar Algoritmo Genetico " << endl;
+	cout << "\n- A executar Algoritmo Genetico " << endl;
 	vector<GenCromossoma*> solucoes;
 	for ( int i = 0 ; i< 50 ; i++){
 		solucoes.push_back(new GenSolucao(avioes,1000,100));
@@ -111,10 +111,15 @@ int main(){
 	GenAlgoritmo a(solucoes,0.1,true, &htmlFile, "Solucao/results.csv");
 	GenSolucao* best = (GenSolucao*)a.fazerIteracoes(1000);
 
-	cout << "\n";
+	cout << "\n\n";
 	
 	cout << "- A executar Arrefecimento Simulado " << endl;
 	SimulatedAnnealing s = SimulatedAnnealing(2000,avioes,5,5,0.98,100, &htmlFile);
+	cout << "\n";
+
+	cout << "- A executar Branch And Bound \n" << endl;
+	BNB search;
+	search.solve(avioes,&htmlFile);
 	cout << "\n";
 
 	htmlFile << "<script>drawAll(\"genCanvas\",\"jsonDataGen\");</script>";

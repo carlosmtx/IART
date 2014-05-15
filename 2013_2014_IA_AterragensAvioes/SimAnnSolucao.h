@@ -8,7 +8,7 @@
 
 #include "Aviao.h"
 
-#define JSON_AVIAO(nome_,hAterragem_,tempoOc_,intervSup_,intervInf_) "{\"nome\":"+'"'+nome_+'"'+",\"hAterragem\":"+to_string(hAterragem_)+ ",\"tempoOcup\":"+to_string(tempoOc_)+",\"intervSup\":"+to_string(intervSup_)+",\"intervInf\":"+to_string(intervInf_)+"}"
+#define JSON_AVIAO(nome_,hAterragem_,tempoOc_,intervInf_,intervSup_) "{\"nome\":"+'"'+nome_+'"'+",\"hAterragem\":"+to_string(hAterragem_)+ ",\"tempoOcup\":"+to_string(tempoOc_)+",\"intervSup\":"+to_string(intervSup_)+",\"intervInf\":"+to_string(intervInf_)+"}"
 
 
 using namespace std;

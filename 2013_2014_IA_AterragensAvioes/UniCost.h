@@ -5,6 +5,7 @@
 #include "aviao.h"
 #include <vector>
 #include <queue>
+#include <fstream>
 
 using namespace std;
 
@@ -25,7 +26,7 @@ public:
 	int departTime;
 	Node* parent;
 	vector<Node*> branches;
-	Aviao* plane;
+	Aviao* aviao;
 	vector<timeInterval> restrictions;
 
 	Node();
@@ -55,7 +56,7 @@ private:
 	vector<Node*> solution;
 	bool hasSolution;
 	priority_queue<Node*, vector<Node*>, DereferenceCompareNode> queue;
-
+	ofstream* html;
 	//priority_queue<Node*> queue;
 	int currentTime,planeIndex;
 	int getLatestTime();
@@ -67,7 +68,7 @@ public:
 	int getSolutionCost();
 	vector<Node*> getSolution(){ return solution; };
 	void printSolution();
-	bool solve(vector<Aviao> planes);
+	bool solve(vector<Aviao> planes, ofstream* htmlFile);
 	~BNB();
 };
 

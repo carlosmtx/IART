@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define JSON_AVIAO(nome_,hAterragem_,tempoOc_,intervInf_,intervSup_) "{\"nome\":"+'"'+nome_+'"'+",\"hAterragem\":"+to_string(hAterragem_)+ ",\"tempoOcup\":"+to_string(tempoOc_)+",\"intervSup\":"+to_string(intervSup_)+",\"intervInf\":"+to_string(intervInf_)+"}"
+
 /*Basic functions*/
 #define boolean(a) ((a)==1?"TRUE":"FALSE")
 //[x1,x2] vs [y1,y2]
@@ -84,8 +86,9 @@ BNB::~BNB()
 {}
 
 
-bool BNB::solve(vector<Aviao> planes)
+bool BNB::solve(vector<Aviao> planes, ofstream* htmlFile)
 {
+	html = htmlFile;
 	for (int i = 0; i < planes.size(); i++)
 	{
 		this->planes.push_back(&planes[i]);
@@ -127,6 +130,7 @@ bool BNB::solve(vector<Aviao> planes)
 		//system("PAUSE");
 	}
 
+
 	buildSolution(top);
 	cout << "Uniform cost: ";
 	if (solution.size() == nPlanes)
@@ -150,14 +154,14 @@ int BNB::generateBranches(Node* origin)
 	Aviao* nextPlane = this->nextPlane(origin);
 	int end = nextPlane->horaJanelaFim;
 
-	if (origin->plane == NULL) //root node
+	if (origin->aviao == NULL) //root node
 	{
 		for (int i = nextPlane->horaJanelaInicio; i <= end; i++)
 		{
 			Node* next = new Node(nextPlane, level);
 			next->parent = origin;
 			next->departTime = i;
-			next->restrictions.push_back(timeInterval(i, i + next->plane->tempoNaoUtilizacao));
+			next->restrictions.push_back(timeInterval(i, i + next->aviao->tempoNaoUtilizacao));
 			origin->branches.push_back(next);
 			nBranches++;
 			//cout << "Added branch from root to " << next->plane->nome << " at time -> " << next->departTime << endl;
@@ -219,7 +223,7 @@ int BNB::generateBranches(Node* origin)
 void BNB::buildSolution(Node* node)
 {
 	vector<Node*> sol;
-	while (node->plane != NULL)
+	while (node->aviao != NULL)
 	{
 		sol.push_back(node);
 		node = node->parent;
@@ -238,13 +242,23 @@ void BNB::printSolution(){
 	cout << "\n";
 
 	for (int i = 0; i < solution.size(); i++){
-		cout << left << setw(20) << solution[i]->plane->nome;
+		cout << left << setw(20) << solution[i]->aviao->nome;
 		cout << left << setw(8) << std::to_string(solution[i]->departTime);
-		cout << left << setw(8) << to_string((int)solution[i]->plane->getCusto(solution[i]->departTime));
+		cout << left << setw(8) << to_string((int)solution[i]->aviao->getCusto(solution[i]->departTime));
 		cout << endl;
 	}
 
 	cout << endl << "CUSTO:" << getSolutionCost()<<endl;
+
+	string str;
+	str += "[";
+	for (int i = 0; i < solution.size(); i++){
+		str += ((string)JSON_AVIAO(solution[i]->aviao->nome, solution[i]->departTime, solution[i]->aviao->tempoNaoUtilizacao, solution[i]->aviao->horaJanelaInicio, solution[i]->aviao->horaJanelaFim));
+		if (i != solution.size() - 1){ str += ","; }
+	}
+	str += "]";
+
+	*html << "<div id=\"jsonDataBNB\" style=\"display:none;\">" << str << "</div>";
 }
 
 
@@ -252,23 +266,23 @@ void BNB::printSolution(){
 
 Node::Node()
 {
-	plane = NULL;
+	aviao = NULL;
 	level = 0;
 }
 
-Node::Node(Aviao* plane, int lvl)
+Node::Node(Aviao* aviao, int lvl)
 {
-	this->plane = plane;
+	this->aviao = aviao;
 	this->level = lvl;
 }
 
 ostream& operator<<(std::ostream& os, const Node* obj)
 {
-	if (obj->plane == NULL)
+	if (obj->aviao == NULL)
 		os << "root";
 	else
 	{
-		os << "{" << obj->plane->nome << " -> " << obj->departTime << "}";
+		os << "{" << obj->aviao->nome << " -> " << obj->departTime << "}";
 	}
 	return os;
 }
@@ -278,10 +292,10 @@ int Node::getTotalCost() const
 	int cost = 0;
 	int auxValue;
 	const Node* aux = this;
-	while (aux->plane != NULL)
+	while (aux->aviao != NULL)
 	{
 
-		auxValue = aux->plane->getCusto(aux->departTime);
+		auxValue = aux->aviao->getCusto(aux->departTime);
 		if (auxValue != -1)
 			cost += auxValue;
 		else

@@ -38,7 +38,8 @@ function drawAll(canvasName,divID){
 
 		ctx.font="10px Georgia";
 		ctx.fillText(data[i].nome,data[i].hAterragem*scaleFactor,50);
-		
+		ctx.fillText(data[i].intervInf.toString()+" - "+data[i].intervSup.toString(),data[i].hAterragem*scaleFactor,80);
+
 
 		if ( i+1 < data.length){
 			{setTimeout(function(){draw(i+1,data,canvasName,divID);},1000);}
@@ -65,7 +66,7 @@ function drawAll(canvasName,divID){
 	ctx.font="10px Georgia";
 	if(canvasName == "genCanvas") ctx.fillText("Algoritmo Genetico",0,30);
 	if(canvasName == "saCanvas") ctx.fillText("Algoritmo Arrefecimento Simulado",0,30);
-
+	if(canvasName == "bnbCanvas") ctx.fillText("Algoritmo Custo Uniforme",0,30);
 	for ( var i = 0 ; i < MAXTIME;i+=2){
 		ctx.fillStyle= "rgba(0,0,0,0.1)";
 
