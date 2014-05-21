@@ -17,9 +17,9 @@ GenSolucao::GenSolucao(vector<AviaoTempo> aterragens,double penalizacao,int domT
 	valorAntesMutacao=0;
 	valorDepoisMutacao=0;
 }
-GenSolucao::GenSolucao(vector<Aviao>& avioes,double penalizacao,int domTemporal){
+GenSolucao::GenSolucao(vector<Aviao>& avioes,double penalizacao){
 		this->penalizacao = penalizacao;
-		this->domTemporal = domTemporal;
+
 		
 		int maskSize = (int)(log(domTemporal)/log(2)+1);
 		int fullrange= (0x01 << (maskSize+1))-1;

@@ -37,6 +37,18 @@ SimulatedAnnealing::SimulatedAnnealing(int maxIteracoes, vector<Aviao> pop, int 
 	executa();
 }
 
+inline void printProgressBar(int& i,int& n,time_t& tm){
+	if ( i % 10 == 0 && i > 0){
+			cout << "\r"; 
+			cout << "[";
+			for ( int j = 0 ; j < 100*i/n	 ;j+=5,cout << "-" ); 
+			for ( int j = 0 ; j < 100-100*i/n;j+=5,cout << "." );
+			cout << "]";
+			cout << 100*i/n << "% completo";
+			cout <<"->Tempo Estimado: " <<double(time(NULL)-tm)*(n-i)/double(i) << " s";
+	}
+}
+
 void SimulatedAnnealing::executa(){
 	
 	temperatura = calculaTemperatura(); // inicia temperatura com valor dependendo do tamanho da populacao
@@ -53,14 +65,15 @@ void SimulatedAnnealing::executa(){
 	int itMelhor=0;
 	cout << "A executar ";
 	j = 0;
+	time_t tm= time(NULL);
 	do{
 
 		i = 0;
 		nSucessos = 0;
 		contadorAux = 0;
 
-		if(j%200 == 0){ 
-			cout << ".";
+		if(j%20 == 0){ 
+			printProgressBar(j,maxIteracoes,tm);
 		}
 		//cout << "Iteracao " << j << endl;
 		//cout << "Temperatura Atual " << temperatura << endl;
@@ -97,7 +110,7 @@ void SimulatedAnnealing::executa(){
 
 
 	}while(temperatura > 0 && j < maxIteracoes); // Para o algoritmo quando temperatura chegar a 0 (nunca lel) ou atingir o max de iters
-
+	printProgressBar(maxIteracoes,maxIteracoes,tm);
 
 	cout << endl << "A melhor solucao encontrada foi: " << itMelhor << "/" << j << endl;
 	solucaoAtual.printSolucaoFinal();

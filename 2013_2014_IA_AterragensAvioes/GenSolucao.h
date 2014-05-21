@@ -39,7 +39,7 @@ private:
 	
 	
 public:
-	GenSolucao(vector<Aviao>& avioes,double penalizacao,int domTemporal);
+	GenSolucao(vector<Aviao>& avioes,double penalizacao);
 	GenCromossoma* obterCopia();
 	string toString();
 	void printString();

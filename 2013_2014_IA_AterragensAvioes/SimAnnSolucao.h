@@ -22,6 +22,8 @@ public:
 	}
 	Aviao* aviao;
 	int    hAterragem;
+
+
 };
 
 
@@ -75,22 +77,20 @@ public:
 		int res = 0;
 		for(int i = 0 ; i < aterragens.size() ; i++ ){
 			res += aterragens[i].getCusto();
-
-			// Verificar tempo de Nao Utilizacao da Pista
-			int incioAterragem = aterragens[i].hAterragem;
-			int fimAterragem = incioAterragem + aterragens[i].aviao->tempoNaoUtilizacao;
-
-			int j = i;
-			for(j = j+1 ; j < aterragens.size(); j++){
-				int inicioJ = aterragens[j].hAterragem;
-				int fimJ = inicioJ + aterragens[j].aviao->tempoNaoUtilizacao;
-
-				if(intervaloIntersecta(incioAterragem, fimAterragem, inicioJ, fimJ)){
-					res+= 1500;
-				}
-			}
-
 		}
+
+		vector<AviaoAterragem> auxiliar = aterragens;
+		sort(auxiliar.begin(),auxiliar.end());
+
+		int hAterragem;
+		int hPistaLivre;
+
+		for ( int i = 0 ; i < auxiliar.size()-1 ; i++){
+			hAterragem = auxiliar[i].hAterragem;
+			hPistaLivre= hAterragem + auxiliar[i].aviao->tempoNaoUtilizacao;
+			if ( hPistaLivre > auxiliar[i+1].hAterragem){res+=1000;}
+		}
+
 		this->custoSolucao = res;
 		return res;
 	}

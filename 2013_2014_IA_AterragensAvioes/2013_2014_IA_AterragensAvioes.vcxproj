@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GenAlgoritmo.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GenSolucao.cpp" />
     <ClCompile Include="SimulatedAnn.cpp" />
@@ -22,6 +23,7 @@
     <ClInclude Include="Aviao.h" />
     <ClInclude Include="GenCromossoma.h" />
     <ClInclude Include="GenSolucao.h" />
+    <ClInclude Include="Loader.h" />
     <ClInclude Include="SimAnnSolucao.h" />
     <ClInclude Include="SimulatedAnn.h" />
     <ClInclude Include="UniCost.h" />
@@ -35,7 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
