@@ -32,7 +32,7 @@ int main(){
 			"<canvas id=\"bnbCanvas\" width=\"10000\" height=\"200\">"+
 			"</canvas>";
 	
-
+	
 	cout << "\n- A executar Algoritmo Genetico " << endl;
 	vector<GenCromossoma*> solucoes;
 	for ( int i = 0 ; i< loader.gen_populacao ; i++){
@@ -56,7 +56,7 @@ int main(){
 	htmlFile.open(resultsPath,ios::app);
 	cout << "- A executar Branch And Bound \n" << endl;
 	BNB search;
-	search.solve(loader.avioes,&htmlFile);
+	search.solve(3,loader.avioes,&htmlFile);
 	cout << "\n";
 
 	htmlFile << "<script>drawAll(\"bnbCanvas\",\"jsonDataBNB\");</script>";

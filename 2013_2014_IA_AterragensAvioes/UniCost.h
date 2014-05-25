@@ -59,6 +59,7 @@ private:
 	ofstream* html;
 	//priority_queue<Node*> queue;
 	int currentTime,planeIndex;
+	int time_to_solve;
 	int getLatestTime();
 	Aviao* nextPlane(Node* node);
 	int generateBranches(Node* origin);
@@ -68,7 +69,7 @@ public:
 	int getSolutionCost();
 	vector<Node*> getSolution(){ return solution; };
 	void printSolution();
-	bool solve(vector<Aviao> planes, ofstream* htmlFile);
+	bool solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile);
 	~BNB();
 };
 

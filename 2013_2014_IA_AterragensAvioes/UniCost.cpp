@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include <thread>
+#include <windows.h>
 
 using namespace std;
 
@@ -86,62 +88,78 @@ BNB::~BNB()
 {}
 
 
-bool BNB::solve(vector<Aviao> planes, ofstream* htmlFile)
+void stopSolving(int t, bool *done, bool *solved)
 {
+	Sleep(t*1000);
+	if (*solved)
+		return;
+	*done = true;
+}
+
+
+bool BNB::solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile)
+{
+	this->time_to_solve = timeToSolve;
+	
+	bool timedOut = false;
+	bool solved = false;
+	
+	std::thread timer(&stopSolving, time_to_solve, &timedOut, &solved);
+	timer.detach();
+
 	html = htmlFile;
 	for (int i = 0; i < planes.size(); i++)
 	{
 		this->planes.push_back(&planes[i]);
 	}
+	
 	currentTime = 0;
 	planeIndex = 0;
 	Node* root = new Node();
-	//root.parent.time = planes[0]->horaJanelaInicio; //set earliest time for the root node
 	int nodeLvl, i, nBranch;
 	queue.push(root);
 	Node * top = NULL;
 	nodeLvl = 0;
 	int nPlanes = planes.size();
-	while (!queue.empty()) //condition must change possibly queue.top().level != planes.size()
+	while (!queue.empty() && !timedOut) //condition must change possibly queue.top().level != planes.size()
 	{
 		top = queue.top();
 		queue.pop();
 		nodeLvl = top->level;
 		if (nodeLvl == nPlanes)
 			break;
-		//cout << "nodeLvl: " << nodeLvl << ", testing: " << top << endl;
 		
 		Node* parent = top;
-		/* cout << endl << "Path: " << endl << "\t";
-		while (parent->plane != NULL)
-		{
-			cout << parent->plane->nome << "[" << parent->departTime << "]" << "<-";
-			parent = parent->parent;
-		}
-		cout << "root" << endl << "\tCost:" << top->getTotalCost() << endl << endl;
-		*/
+	
 		nBranch = generateBranches(top);
-		//cout << endl << "number of branches generated: " << nBranch << endl;
+		
 		for (i = 0; i < nBranch; i++)
 		{
 			queue.push((top->branches[i]));
 		}
-		//cout << "Queue size: " << queue.size() << endl << endl;
-		//system("PAUSE");
+		
 	}
-
+	
+	if (timedOut)
+	{
+		cout << "Algoritmo demorou demasiado tempo, vamos ver o que temos:\n\n";
+	}
+	else
+		solved = true; // searched the tree completly or found solution
 
 	buildSolution(top);
-	cout << "Uniform cost: ";
+	cout << "Custo Uniforme: ";
+	printSolution();
+
 	if (solution.size() == nPlanes)
 	{
-		cout << "Found solution";
-		printSolution();
+		cout << "Solução encontrada";
+		//printSolution();
 		return true;
 	}
 	else
 	{
-		cout << "No solution could be found" << endl;
+		cout << "Nenhuma solucao encontrada" << endl;
 		return false;
 	}
 }
@@ -299,7 +317,7 @@ int Node::getTotalCost() const
 		if (auxValue != -1)
 			cost += auxValue;
 		else
-			cost += std::numeric_limits<int>::max(); //cost penalty
+			cost += 50000; //cost penalty
 		aux = aux->parent;
 	}
 	return cost;
