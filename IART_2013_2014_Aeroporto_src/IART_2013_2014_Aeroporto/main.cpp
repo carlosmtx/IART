@@ -62,7 +62,7 @@ int main(){
 	htmlFile.close();
 	
 	htmlFile.open(resultsPath,ios::app);
-	cout << "- A executar Unit Cost \n" << endl;
+	cout << "- A executar Custo Uniforme \n" << endl;
 	BNB search;
 	timeBeg = time(NULL);
 	search.solve(loader.unit_MaxTime,loader.avioes,&htmlFile);

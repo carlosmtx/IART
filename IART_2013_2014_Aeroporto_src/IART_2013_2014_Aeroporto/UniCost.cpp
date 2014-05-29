@@ -160,6 +160,7 @@ bool BNB::solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile)
 	else
 	{
 		cout << "Nenhuma solucao encontrada" << endl;
+		getBadSolution();
 		return false;
 	}
 }
@@ -236,6 +237,78 @@ int BNB::generateBranches(Node* origin)
 		//origin->restrictions.pop_back(); //removes temporary restriction
 	}
 	return nBranches;
+}
+
+void BNB::getBadSolution()
+{
+	int nPlane = planes.size();
+	
+	vector<timeInterval> restrictions = solution[solution.size() - 1]->restrictions;
+	
+	int nRest = restrictions.size();
+
+	cout << "\nRestrictions calculated:\n";
+	
+	for (int i = 0; i < restrictions.size(); i++)
+	{
+		cout << restrictions[i].start << " - " << restrictions[i].finish << endl;
+	}
+	cout << endl;
+
+	Node* next;
+	Aviao* plane = nextPlane(solution[solution.size() - 1]);
+
+	int startOri, endOri, startDest, endDest;
+	bool sucess;
+	int unplacedPlanes = 0;
+	vector <Aviao*> notPlaced;
+	while (nRest < nPlane)
+	{
+		startDest = plane->horaPreferencial;
+		endDest = startDest + plane->tempoNaoUtilizacao;
+		sucess = true;
+		for (int i = 0; i < nRest; i++)
+		{
+			startOri = restrictions[i].start;
+			endOri = restrictions[i].finish;
+			//cout << startOri << " - " << endOri << " overlaps " << startDest << " - " << endDest << " ? " << (is_overlapping(startDest, endDest, startOri, endOri) ? "true" : "false") << endl;
+			if (is_overlapping(startDest, endDest, startOri, endOri))
+			{
+				notPlaced.push_back(plane);
+				unplacedPlanes++;
+				sucess = false;
+				break;
+			}
+		}
+
+		if (sucess)
+		{
+			Node* aux = new Node(plane, solution.back()->level + 1);
+			aux->departTime = startDest;
+			solution.push_back(aux);
+			restrictions.push_back(timeInterval(startDest, endDest));
+			plane = nextPlane(solution.back());
+		}
+		else if (nRest != nPlane-1)
+			plane = planes[nRest+1];
+
+		nRest++;
+		
+	}
+
+	cout << "we got: \n";
+	printSolution();
+
+	if (unplacedPlanes > 0)
+	{
+		cout << "\nCould not place these " << unplacedPlanes << " planes\n\n";
+		for (int i = 0; i < unplacedPlanes; i++)
+		{
+			cout << notPlaced[i]->nome << " " << notPlaced[i]->horaJanelaInicio << " - " << notPlaced[i]->horaJanelaFim << endl;
+		}
+	}
+
+
 }
 
 void BNB::buildSolution(Node* node)

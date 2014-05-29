@@ -1,1 +1,1 @@
-maxTime=10
+maxTime=5

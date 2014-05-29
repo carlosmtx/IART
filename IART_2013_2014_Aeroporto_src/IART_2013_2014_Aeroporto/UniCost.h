@@ -64,6 +64,7 @@ private:
 	Aviao* nextPlane(Node* node);
 	int generateBranches(Node* origin);
 	void buildSolution(Node* node);
+	void getBadSolution();
 public:
 	BNB();
 	int getSolutionCost();
