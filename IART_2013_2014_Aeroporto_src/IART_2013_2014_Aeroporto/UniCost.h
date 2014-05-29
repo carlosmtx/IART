@@ -52,6 +52,7 @@ struct DereferenceCompareNode : public std::binary_function<Node*, Node*, bool>
 class BNB
 {
 private:
+	int solutionCost;
 	vector<Aviao*> planes;
 	vector<Node*> solution;
 	bool hasSolution;

@@ -12,7 +12,6 @@ using namespace std;
 
 /*Basic functions*/
 #define boolean(a) ((a)==1?"TRUE":"FALSE")
-//[x1,x2] vs [y1,y2]
 bool is_overlapping(int x1, int x2, int y1, int y2) {
 	return (bool)((((unsigned int)((x2 - y1) | (y2 - x1))) >> (sizeof(int)* 8 - 1)) ^ 1);
 }
@@ -54,13 +53,7 @@ bool operator<(const Node& lhs, const Node& rhs)
 
 /*Branch and Bound class related functions*/
 BNB::BNB()
-{
-	/*
-	for (int i = 0; i < 5; i++)
-	{
-	cout << "Testing for " << i << ": 1->" << boolean(is_overlapping(1, 3, i, i + 5)) << ", 2->" << boolean(is_overlapping(6, 10, i, i + 5)) << endl;
-	}*/
-}
+{}
 
 Aviao* BNB::nextPlane(Node* node)
 {
@@ -69,7 +62,7 @@ Aviao* BNB::nextPlane(Node* node)
 
 int BNB::getSolutionCost()
 {
-	return solution[0]->getTotalCost();
+	return solutionCost;
 }
 
 int BNB::getLatestTime()
@@ -121,7 +114,7 @@ bool BNB::solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile)
 	Node * top = NULL;
 	nodeLvl = 0;
 	int nPlanes = planes.size();
-	while (!queue.empty() && !timedOut) //condition must change possibly queue.top().level != planes.size()
+	while (!queue.empty() && !timedOut)
 	{
 		top = queue.top();
 		queue.pop();
@@ -145,14 +138,14 @@ bool BNB::solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile)
 		cout << "Algoritmo demorou demasiado tempo, vamos ver o que temos:\n\n";
 	}
 	else
-		solved = true; // searched the tree completly or found solution
+		solved = true; // searched the tree completely or found solution
 
 	cout << "Custo Uniforme: ";
+	buildSolution(top);
 
 	if (solution.size() == nPlanes)
 	{
 		cout << "Solução encontrada";
-		buildSolution(top);
 		printSolution();
 		return true;
 	}
@@ -182,7 +175,6 @@ int BNB::generateBranches(Node* origin)
 			next->restrictions.push_back(timeInterval(i, i + next->aviao->tempoNaoUtilizacao));
 			origin->branches.push_back(next);
 			nBranches++;
-			//cout << "Added branch from root to " << next->plane->nome << " at time -> " << next->departTime << endl;
 		}
 	}
 	else
@@ -190,14 +182,6 @@ int BNB::generateBranches(Node* origin)
 		bool valid;
 		int size = origin->restrictions.size();
 		int startNext, endNext, startOri, endOri;
-		/*cout << "Restrictions: ";
-		for (int i = 0; i < size; i++)
-		{
-			cout << "[" << origin->restrictions[i].start << "," << origin->restrictions[i].finish << "]";
-			if (i != origin->restrictions.size() - 1)
-				cout << ", ";
-		}
-		cout << endl;*/
 		for (int i = nextPlane->horaJanelaInicio; i <= end; i++)
 		{
 			valid = true;
@@ -207,10 +191,8 @@ int BNB::generateBranches(Node* origin)
 			{
 				startOri = origin->restrictions[j].start;
 				endOri = origin->restrictions[j].finish;
-				//cout << "Testing [" << startNext << "," << endNext << "] with: [" << startOri << "," << endOri << "]" << endl;
 				if (is_overlapping(startNext, endNext, startOri, endOri))
 				{
-					//cout << " ... skipped " << endl;
 					valid = false;
 					break;
 				}
@@ -219,8 +201,7 @@ int BNB::generateBranches(Node* origin)
 			{
 				Node* next = new Node(nextPlane, level);
 				//add parent's restrictions to new son
-				//cout << "\tadding " << size << " parent restrictions\n\n";
-				for (int z = 0; z < size; z++) //add parent's restrictions
+				for (int z = 0; z < size; z++) 
 				{
 					next->restrictions.push_back(origin->restrictions[z]);
 				}
@@ -230,10 +211,9 @@ int BNB::generateBranches(Node* origin)
 				next->restrictions.push_back(timeInterval(startNext, endNext));
 				origin->branches.push_back(next);
 				nBranches++;
-				//cout << " ... Added branch " << origin->plane->nome << " to " << next->plane->nome << " with interval: [" << startNext << "," << endNext << "], and cost: " << next->getTotalCost() << endl << endl;
+			
 			}
 		}
-		//origin->restrictions.pop_back(); //removes temporary restriction
 	}
 	return nBranches;
 }
@@ -262,7 +242,6 @@ void BNB::getBadSolution()
 		{
 			startOri = restrictions[i].start;
 			endOri = restrictions[i].finish;
-			//cout << startOri << " - " << endOri << " overlaps " << startDest << " - " << endDest << " ? " << (is_overlapping(startDest, endDest, startOri, endOri) ? "true" : "false") << endl;
 			if (is_overlapping(startDest, endDest, startOri, endOri))
 			{
 				notPlaced.push_back(plane);
@@ -296,7 +275,7 @@ void BNB::getBadSolution()
 		cout << "\nNao foi possivel colocar estes " << unplacedPlanes << " avioes\n\n";
 		for (int i = 0; i < unplacedPlanes; i++)
 		{
-			cout << notPlaced[i]->nome << " " << notPlaced[i]->horaJanelaInicio << " - " << notPlaced[i]->horaJanelaFim << endl;
+			cout << notPlaced[i]->nome << ": [" << notPlaced[i]->horaJanelaInicio << " - " << notPlaced[i]->horaJanelaFim <<"]"<< endl;
 		}
 	}
 
@@ -306,11 +285,15 @@ void BNB::getBadSolution()
 void BNB::buildSolution(Node* node)
 {
 	vector<Node*> sol;
+	int cost = 0;
 	while (node->aviao != NULL)
 	{
 		sol.push_back(node);
+		cost += node->aviao->getCusto(node->departTime);
+
 		node = node->parent;
 	}
+	solutionCost = cost;
 	std::reverse(sol.begin(), sol.end());
 	solution = sol;
 	return;
@@ -331,7 +314,7 @@ void BNB::printSolution(){
 		cout << endl;
 	}
 
-	cout << endl << "CUSTO:" << getSolutionCost()<<endl;
+	cout << endl << "CUSTO:" << solutionCost<<endl;
 
 	string str;
 	str += "[";
@@ -377,12 +360,11 @@ int Node::getTotalCost() const
 	const Node* aux = this;
 	while (aux->aviao != NULL)
 	{
-
 		auxValue = aux->aviao->getCusto(aux->departTime);
 		if (auxValue != -1)
 			cost += auxValue;
 		else
-			cost += 50000; //cost penalty
+			cost += 5000; //cost penalty
 		aux = aux->parent;
 	}
 	return cost;
