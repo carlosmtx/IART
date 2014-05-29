@@ -7,9 +7,14 @@ Loader::Loader(string gen, string sim,string unit){
 	ifstream infile;
 
 	
-	cout << "Insira o nome do ficheiro: " << endl;
-	cin >> filename;
-	infile.open(filename);
+	do{
+		cout << "Insira o nome do ficheiro: " << endl;
+		cin >> filename;
+		infile.open(filename);
+		if(!infile.is_open()){
+			cout << "Ficheiro invalido." << endl;
+		}
+	}while(!infile.is_open());
 
 	string line;
 	string nomeAviao;

@@ -1,4 +1,4 @@
-maxIter=3000
+maxIter=2000
 maxPerturb=3
 maxSucessos=3
 fatorReducao=0.96

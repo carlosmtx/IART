@@ -147,14 +147,13 @@ bool BNB::solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile)
 	else
 		solved = true; // searched the tree completly or found solution
 
-	buildSolution(top);
 	cout << "Custo Uniforme: ";
-	printSolution();
 
 	if (solution.size() == nPlanes)
 	{
 		cout << "Solução encontrada";
-		//printSolution();
+		buildSolution(top);
+		printSolution();
 		return true;
 	}
 	else
@@ -247,14 +246,6 @@ void BNB::getBadSolution()
 	
 	int nRest = restrictions.size();
 
-	cout << "\nRestrictions calculated:\n";
-	
-	for (int i = 0; i < restrictions.size(); i++)
-	{
-		cout << restrictions[i].start << " - " << restrictions[i].finish << endl;
-	}
-	cout << endl;
-
 	Node* next;
 	Aviao* plane = nextPlane(solution[solution.size() - 1]);
 
@@ -285,6 +276,7 @@ void BNB::getBadSolution()
 		{
 			Node* aux = new Node(plane, solution.back()->level + 1);
 			aux->departTime = startDest;
+			aux->parent = solution.back();
 			solution.push_back(aux);
 			restrictions.push_back(timeInterval(startDest, endDest));
 			plane = nextPlane(solution.back());
@@ -296,12 +288,12 @@ void BNB::getBadSolution()
 		
 	}
 
-	cout << "we got: \n";
+	buildSolution(solution.back());
 	printSolution();
 
 	if (unplacedPlanes > 0)
 	{
-		cout << "\nCould not place these " << unplacedPlanes << " planes\n\n";
+		cout << "\nNao foi possivel colocar estes " << unplacedPlanes << " avioes\n\n";
 		for (int i = 0; i < unplacedPlanes; i++)
 		{
 			cout << notPlaced[i]->nome << " " << notPlaced[i]->horaJanelaInicio << " - " << notPlaced[i]->horaJanelaFim << endl;

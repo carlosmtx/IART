@@ -162,8 +162,6 @@ SimAnnSolucao SimulatedAnnealing::perturbacao(SimAnnSolucao s){
 			unique(aleat.begin(),aleat.end());	
 		}
 		
-		//vector<int> aleat;
-		//aleat.push_back(rand()%noAvioes);
 
 		// Alterar os iteradores escolhidos
 		Aviao* aux;
@@ -172,7 +170,7 @@ SimAnnSolucao SimulatedAnnealing::perturbacao(SimAnnSolucao s){
 			
 			// A inserir aleatoriamente na hora preferencial
 			int r = rand();
-			if(r < 0.3){
+			if(r < 0.1){
 				cur.aterragens.at(aleat[j]).hAterragem = aux->horaPreferencial;
 			}
 			else{
