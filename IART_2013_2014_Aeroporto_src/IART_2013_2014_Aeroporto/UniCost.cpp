@@ -101,7 +101,7 @@ bool BNB::solve(int timeToSolve, vector<Aviao> planes, ofstream* htmlFile)
 	timer.detach();
 
 	html = htmlFile;
-	for (int i = 0; i < planes.size(); i++)
+	for (unsigned int i = 0; i < planes.size(); i++)
 	{
 		this->planes.push_back(&planes[i]);
 	}
@@ -226,7 +226,6 @@ void BNB::getBadSolution()
 	
 	int nRest = restrictions.size();
 
-	Node* next;
 	Aviao* plane = nextPlane(solution[solution.size() - 1]);
 
 	int startOri, endOri, startDest, endDest;
@@ -307,7 +306,7 @@ void BNB::printSolution(){
 	cout << left << setw(8) << "Custo";
 	cout << "\n";
 
-	for (int i = 0; i < solution.size(); i++){
+	for (unsigned int i = 0; i < solution.size(); i++){
 		cout << left << setw(20) << solution[i]->aviao->nome;
 		cout << left << setw(8) << std::to_string(solution[i]->departTime);
 		cout << left << setw(8) << to_string((int)solution[i]->aviao->getCusto(solution[i]->departTime));
@@ -318,7 +317,7 @@ void BNB::printSolution(){
 
 	string str;
 	str += "[";
-	for (int i = 0; i < solution.size(); i++){
+	for (unsigned int i = 0; i < solution.size(); i++){
 		str += ((string)JSON_AVIAO(solution[i]->aviao->nome, solution[i]->departTime, solution[i]->aviao->tempoNaoUtilizacao, solution[i]->aviao->horaJanelaInicio, solution[i]->aviao->horaJanelaFim));
 		if (i != solution.size() - 1){ str += ","; }
 	}
