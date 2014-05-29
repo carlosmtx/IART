@@ -1,0 +1,4 @@
+iteracoes=100
+elitista=0
+populacao=100
+probMutacao=0.1
